@@ -39,7 +39,7 @@ function Download-JarFiles {
 }
 
 # Artifactory URL and repositories
-$artifactoryUrl = "https://demo.fis.dev/artifactory"
+$artifactoryUrl = "https://artifactory.fis.dev/artifactory"
 $repositories = @("a", "b", "c")
 
 # Loop through each repository and download JAR files
