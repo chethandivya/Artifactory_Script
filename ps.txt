@@ -1,0 +1,48 @@
+# Function to download JAR files from a repository
+function Download-JarFiles {
+    param (
+        [string]$artifactoryUrl,
+        [string]$repository
+    )
+
+    try {
+        # Construct the API URL to list items in the repository
+        $listUrl = "$artifactoryUrl/api/storage/$repository"
+        
+        # Send HTTP GET request to list items in the repository
+        $response = Invoke-RestMethod -Uri $listUrl -Method Get
+        
+        # Check if the response contains any items
+        if ($response.children) {
+            # Iterate through each item in the repository
+            foreach ($item in $response.children) {
+                # Check if the item is a JAR file
+                if ($item.uri.EndsWith(".jar")) {
+                    # Construct the download URL for the JAR file
+                    $downloadUrl = "$artifactoryUrl/$repository/$($item.uri)"
+                    
+                    # Get the filename of the JAR file
+                    $filename = [System.IO.Path]::GetFileName($item.uri)
+                    
+                    # Download the JAR file
+                    Invoke-WebRequest -Uri $downloadUrl -OutFile $filename -UseBasicParsing
+                    Write-Host "Downloaded $filename from $repository"
+                }
+            }
+        } else {
+            Write-Host "No files found in repository $repository"
+        }
+    }
+    catch {
+        Write-Host "Error: $_"
+    }
+}
+
+# Artifactory URL and repositories
+$artifactoryUrl = "https://demo.fis.dev/artifactory"
+$repositories = @("a", "b", "c")
+
+# Loop through each repository and download JAR files
+foreach ($repo in $repositories) {
+    Download-JarFiles -artifactoryUrl $artifactoryUrl -repository $repo
+}
