@@ -1,0 +1,32 @@
+# Define the base URL for your JFrog Artifactory
+$artifactoryBaseUrl = "https://your-artifactory-instance/artifactory"
+ 
+# Specify your Artifactory API key
+$artifactoryApiKey = "your-api-key"
+ 
+# Create a new WebClient object
+$webClient = New-Object System.Net.WebClient
+ 
+# Add the JFrog Artifactory API key to the WebClient's headers
+$webClient.Headers.Add("X-JFrog-Art-Api", $artifactoryApiKey)
+ 
+# Define the list of artifacts to download
+$filesToDownload = @("path/to/artifact1.zip", "path/to/artifact2.tar.gz", "path/to/artifact3.jar")
+ 
+# Specify the directory where the artifacts will be downloaded
+$downloadDirectory = "C:\path\to\download\directory"
+ 
+# Download each artifact
+foreach ($file in $filesToDownload) {
+    $fileUrl = "$artifactoryBaseUrl/$file" # Construct the full URL
+    $localPath = Join-Path $downloadDirectory (Split-Path -Leaf $file) # Determine the local path
+    try {
+        $webClient.DownloadFile($fileUrl, $localPath) # Download the file
+        Write-Host "Downloaded: $file"
+    } catch {
+        Write-Error "Error downloading '$file': $_"
+    }
+}
+ 
+# Clean up the WebClient
+$webClient.Dispose()
