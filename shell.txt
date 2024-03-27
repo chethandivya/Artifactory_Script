@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Artifactory details
+artifactory_user="your_username"
+artifactory_api_key="your_api_key"
+artifactory_base_url="https://your_artifactory_server/artifactory"
+
+# List of artifacts to download
+declare -a artifacts=(
+  "repo-name/path/to/artifact1"
+  "repo-name/path/to/artifact2"
+  "repo-name/path/to/artifact3"
+)
+
+# Directory to save downloaded artifacts
+download_directory="/path/to/download/directory"
+
+# Function to download a single artifact
+download_artifact() {
+  local artifact=$1
+  local url="${artifactory_base_url}/${artifact}"
+
+  echo "Downloading ${artifact}..."
+  curl -u "${artifactory_user}:${artifactory_api_key}" -o "${download_directory}/$(basename ${artifact})" "${url}"
+}
+
+# Loop through all artifacts and download them
+for artifact in "${artifacts[@]}"; do
+  download_artifact "${artifact}"
+done
+
+echo "Download completed."
