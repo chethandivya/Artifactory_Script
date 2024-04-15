@@ -1,0 +1,27 @@
+//Shell script to download from Jfrog to VMs
+
+Sure, you can use a shell script to download artifacts from JFrog Artifactory to your VM servers. Here’s a basic example of how you might do this using curl. This script assumes that you have curl installed on your VM and that you’re using Artifactory’s REST API:
+
+#!/bin/bash
+
+# Variables
+ARTIFACTORY_URL="https://your.artifactory.server/artifactory"
+REPO_KEY="your-repo-key"
+ARTIFACT_PATH="path/to/your/artifact"
+TARGET_DIR="/path/to/target/directory"
+USER="your-username"
+API_KEY="your-api-key"
+
+# Construct the URL
+URL="${ARTIFACTORY_URL}/${REPO_KEY}/${ARTIFACT_PATH}"
+
+# Download the artifact
+curl -u${USER}:${API_KEY} -O ${URL} -o ${TARGET_DIR}
+
+echo "Download complete!"
+
+Please replace "https://your.artifactory.server/artifactory", "your-repo-key", "path/to/your/artifact", "/path/to/target/directory", "your-username", and "your-api-key" with your actual Artifactory URL, repository key, artifact path, target directory, username, and API key respectively.
+
+This script will download the specified artifact from Artifactory and save it to the specified directory on your VM.
+
+Please note that this is a basic example and might need to be adjusted based on your specific needs and environment. Always test scripts in a safe and recoverable environment before deploying them. Also, remember to handle your credentials securely.
